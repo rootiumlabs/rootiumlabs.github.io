@@ -1,0 +1,602 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08090b">
+<meta name="description" content="Rootium - Independent security research and engineering. Building Veyra, a new approach to vulnerability analysis.">
+<title>ROOTIUM - Security, Reconsidered.</title>
+
+<style>
+:root {
+  --bg:#08090b;
+  --panel:#101216;
+  --text:#f2f3ef;
+  --muted:#929891;
+  --line:rgba(255,255,255,.12);
+  --lime:#d1f27a;
+  --mono:"SFMono-Regular",Consolas,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:Inter,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit;text-decoration:none}
+.wrap{width:min(1200px,calc(100% - 48px));margin:auto}
+.topline{height:2px;background:linear-gradient(90deg,var(--lime),transparent)}
+header{
+  position:sticky;top:0;z-index:10;
+  background:rgba(8,9,11,.88);
+  backdrop-filter:blur(18px);
+  border-bottom:1px solid var(--line);
+}
+nav{
+  height:78px;display:flex;
+  justify-content:space-between;align-items:center;
+}
+.logo{width:125px;height:58px;object-fit:contain;filter:invert(1)}
+.links{display:flex;align-items:center;gap:34px}
+.links a{font-size:12px;color:#aaa}
+.links a:hover{color:var(--lime)}
+.links .contact{
+  border:1px solid var(--line);
+  padding:12px 17px;color:white;
+}
+.hero{
+  padding:130px 0 110px;
+  position:relative;overflow:hidden;
+}
+.hero:before{
+  content:"";position:absolute;
+  width:650px;height:650px;
+  right:-220px;top:-170px;
+  border:1px solid rgba(209,242,122,.09);
+  border-radius:50%;
+  box-shadow:0 0 0 70px rgba(209,242,122,.018),
+             0 0 0 140px rgba(209,242,122,.012);
+}
+.hero-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:55px;align-items:center;
+  position:relative;
+}
+.kicker{
+  color:var(--lime);
+  font:10px var(--mono);
+  letter-spacing:3px;
+  text-transform:uppercase;
+}
+h1{
+  font-size:clamp(55px,7vw,90px);
+  line-height:.98;
+  letter-spacing:-6px;
+  font-weight:550;
+  margin:28px 0;
+}
+h1 em{font-style:normal;color:var(--lime)}
+.lead{
+  max-width:520px;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.9;
+}
+.actions{display:flex;gap:13px;margin-top:34px;flex-wrap:wrap}
+.btn{
+  padding:15px 19px;
+  font-size:12px;
+  font-weight:600;
+  border:1px solid var(--line);
+  transition:.2s;
+}
+.btn.primary{background:var(--lime);color:#10130a;border-color:var(--lime)}
+.btn:hover{transform:translateY(-3px);border-color:var(--lime)}
+.btn.primary:hover{background:#edffc1}
+.hero-meta{
+  display:flex;gap:32px;
+  border-top:1px solid var(--line);
+  margin-top:55px;padding-top:22px;
+}
+.hero-meta small{
+  display:block;color:#777;
+  font:9px var(--mono);margin-bottom:8px;
+}
+.hero-meta span{font-size:11px;color:#c4c9c0}
+.visual{
+  min-height:410px;
+  display:grid;place-items:center;
+  position:relative;
+}
+.orbit{
+  width:310px;height:310px;
+  border:1px solid rgba(209,242,122,.3);
+  border-radius:50%;
+  position:relative;
+  display:grid;place-items:center;
+  box-shadow:0 0 80px rgba(209,242,122,.05);
+}
+.orbit:before,.orbit:after{
+  content:"";position:absolute;
+  border:1px solid rgba(209,242,122,.17);
+  border-radius:50%;
+}
+.orbit:before{inset:35px}
+.orbit:after{inset:85px}
+.core{
+  width:85px;height:85px;
+  border:1px solid var(--lime);
+  border-radius:50%;
+  display:grid;place-items:center;
+  color:var(--lime);
+  font:13px var(--mono);
+  background:#10160c;
+  box-shadow:0 0 35px rgba(209,242,122,.2);
+}
+.orbit-line{
+  position:absolute;width:100%;height:1px;
+  background:rgba(209,242,122,.2);
+}
+.orbit-line.vertical{transform:rotate(90deg)}
+.orbit-line.diagonal{transform:rotate(45deg)}
+.orbit-dot{
+  position:absolute;width:7px;height:7px;
+  border-radius:50%;background:var(--lime);
+  box-shadow:0 0 12px var(--lime);
+}
+.dot-one{top:12%;left:25%}
+.dot-two{right:8%;top:55%}
+.dot-three{bottom:17%;left:19%}
+.float{
+  position:absolute;background:#101216;
+  border:1px solid var(--line);
+  padding:13px 15px;
+  font:9px var(--mono);color:#aeb5a8;
+  letter-spacing:1px;
+}
+.float strong{display:block;color:white;margin-top:8px;font-size:10px}
+.float.one{top:30px;right:0}
+.float.two{bottom:25px;left:0}
+.strip{
+  border-block:1px solid var(--line);
+  background:#0d0f12;padding:24px 0;
+}
+.strip-inner{
+  display:flex;justify-content:space-between;
+  gap:20px;flex-wrap:wrap;
+}
+.strip span{
+  font:9px var(--mono);
+  color:#8b9388;letter-spacing:2px;
+}
+section{padding:110px 0;border-bottom:1px solid var(--line)}
+.section-head{
+  display:flex;justify-content:space-between;
+  align-items:end;gap:40px;margin-bottom:45px;
+}
+h2{
+  font-size:clamp(38px,5vw,61px);
+  letter-spacing:-4px;line-height:1.05;
+  font-weight:550;margin-top:20px;
+}
+.description{
+  color:var(--muted);font-size:13px;
+  line-height:1.9;max-width:420px;
+}
+.product{
+  border:1px solid var(--line);
+  background:linear-gradient(120deg,rgba(209,242,122,.055),transparent 60%),#101216;
+  display:grid;grid-template-columns:.9fr 1.1fr;
+  min-height:420px;
+}
+.product-copy{
+  padding:50px;display:flex;
+  flex-direction:column;justify-content:center;
+  align-items:flex-start;
+}
+.product-name{
+  color:var(--lime);
+  letter-spacing:8px;font-weight:800;
+  font-size:14px;
+}
+.product-copy h3{
+  font-size:55px;line-height:.98;
+  letter-spacing:-4px;font-weight:550;
+  margin:25px 0;
+}
+.product-copy p{
+  color:var(--muted);font-size:13px;
+  line-height:1.9;max-width:380px;
+}
+.product-copy .btn{margin-top:27px}
+.dashboard{
+  padding:35px 35px 35px 0;
+  display:flex;align-items:center;
+}
+.window{
+  width:100%;background:#090b0e;
+  border:1px solid rgba(255,255,255,.16);
+}
+.window-head{
+  padding:15px;border-bottom:1px solid var(--line);
+  display:flex;justify-content:space-between;
+  color:#858c83;font:9px var(--mono);
+}
+.window-body{display:grid;grid-template-columns:100px 1fr;min-height:275px}
+.sidebar{border-right:1px solid var(--line);padding:20px 12px}
+.side-line{height:5px;background:#252a2e;margin-bottom:17px;width:75%}
+.side-line.active{background:var(--lime);width:60%}
+.editor{padding:23px}
+.editor small{font:9px var(--mono);color:var(--lime)}
+.editor h4{font-size:17px;margin:14px 0 22px;font-weight:500}
+.code-line{height:5px;background:#292e32;margin-bottom:12px;border-radius:5px}
+.code-line:nth-child(2){width:85%}
+.code-line:nth-child(3){width:65%}
+.code-line:nth-child(4){width:75%}
+.code-line.highlight{width:70%;background:rgba(209,242,122,.7)}
+.evidence{
+  border:1px solid rgba(209,242,122,.25);
+  background:rgba(209,242,122,.035);
+  padding:15px;margin-top:23px;
+}
+.evidence b{font:9px var(--mono);color:var(--lime)}
+.evidence p{font-size:10px;color:#858c83;line-height:1.7;margin-top:10px}
+.capabilities{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  border:1px solid var(--line);
+}
+.cap{
+  padding:28px 23px;min-height:190px;
+  border-right:1px solid var(--line);
+}
+.cap:last-child{border:0}
+.cap small{font:9px var(--mono);color:var(--lime)}
+.cap h3{font-size:16px;margin:38px 0 12px;font-weight:550}
+.cap p{font-size:11px;line-height:1.8;color:var(--muted)}
+.about{
+  display:grid;grid-template-columns:.8fr 1.2fr;gap:80px;
+}
+.about p{
+  color:#aeb2aa;font-size:16px;
+  line-height:1.95;margin-bottom:20px;
+}
+.about strong{color:white;font-weight:550}
+.research{
+  display:grid;grid-template-columns:1fr 1fr;gap:15px;
+}
+.research-card{
+  border:1px solid var(--line);
+  padding:30px;min-height:215px;
+  transition:.25s;
+}
+.research-card:hover{
+  border-color:rgba(209,242,122,.4);
+  transform:translateY(-3px);
+}
+.research-card small{font:9px var(--mono);color:var(--lime)}
+.research-card h3{
+  font-size:22px;letter-spacing:-1px;
+  font-weight:550;margin:27px 0 12px;
+}
+.research-card p{
+  font-size:12px;line-height:1.8;color:var(--muted);
+}
+.closing{padding:85px 0}
+.closing-box{
+  border:1px solid rgba(209,242,122,.25);
+  padding:55px;
+  display:flex;align-items:center;
+  justify-content:space-between;gap:30px;
+  background:radial-gradient(ellipse at 90% 50%,rgba(209,242,122,.08),transparent 50%);
+}
+.closing h2{font-size:43px;margin:15px 0}
+.closing p{font-size:12px;color:var(--muted)}
+footer{border-top:1px solid var(--line);padding:30px 0}
+.footer{
+  display:flex;justify-content:space-between;
+  align-items:center;gap:25px;
+}
+.footer .logo{width:105px;height:45px}
+.footer small{font:9px var(--mono);color:#737b72}
+.footer-links{display:flex;gap:20px}
+.footer-links a{font-size:10px;color:#aaa}
+.footer-links a:hover{color:var(--lime)}
+.reveal{opacity:0;transform:translateY(15px);transition:.7s}
+.reveal.visible{opacity:1;transform:none}
+@media(max-width:850px){
+  .hero-grid,.product,.about{grid-template-columns:1fr}
+  .dashboard{padding:0 25px 25px}
+  .capabilities{grid-template-columns:1fr 1fr}
+  .cap:nth-child(2){border-right:0}
+  .cap:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .about{gap:30px}
+}
+@media(max-width:600px){
+  .wrap{width:calc(100% - 34px)}
+  .links{gap:13px}
+  .links a{font-size:10px}
+  .links .contact{display:none}
+  .hero{padding:85px 0}
+  h1{font-size:57px;letter-spacing:-4px}
+  .visual{min-height:340px}
+  .orbit{width:260px;height:260px}
+  .section{padding:75px 0}
+  .section-head{flex-direction:column;align-items:flex-start}
+  .product-copy{padding:30px}
+  .product-copy h3{font-size:46px}
+  .capabilities,.research{grid-template-columns:1fr}
+  .cap,.cap:nth-child(2){border-right:0;border-bottom:1px solid var(--line)}
+  .cap:last-child{border:0}
+  .closing-box{padding:30px;flex-direction:column;align-items:flex-start}
+  .closing h2{font-size:34px}
+  .footer{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+
+<body>
+<div class="topline"></div>
+
+<header>
+  <div class="wrap">
+    <nav>
+      <a href="#home">
+        <img class="logo" src="logo.png" alt="ROOTIUM">
+      </a>
+      <div class="links">
+        <a href="#veyra">Veyra</a>
+        <a href="#approach">Approach</a>
+        <a href="#research">Research</a>
+        <a href="#about">About</a>
+        <a class="contact" href="#research">Explore ↗</a>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main id="home">
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="reveal">
+      <div class="kicker">Independent security research & engineering</div>
+      <h1>Security is<br>deeper than<br><em>the surface.</em></h1>
+      <p class="lead">
+        Rootium is building a new generation of systems for vulnerability
+        research. We look beyond isolated findings to investigate the
+        conditions, relationships and behaviours that shape software security.
+      </p>
+      <div class="actions">
+        <a class="btn primary" href="#veyra">Discover Veyra ↗</a>
+        <a class="btn" href="#research">Explore research ↗</a>
+      </div>
+      <div class="hero-meta">
+        <div><small>01 / FLAGSHIP</small><span>Veyra engine</span></div>
+        <div><small>02 / DISCIPLINE</small><span>Systems research</span></div>
+        <div><small>03 / STATUS</small><span>In development</span></div>
+      </div>
+    </div>
+
+    <div class="visual reveal">
+      <div class="orbit">
+        <div class="orbit-line"></div>
+        <div class="orbit-line vertical"></div>
+        <div class="orbit-line diagonal"></div>
+        <i class="orbit-dot dot-one"></i>
+        <i class="orbit-dot dot-two"></i>
+        <i class="orbit-dot dot-three"></i>
+        <div class="core">R / 01</div>
+      </div>
+      <div class="float one">RESEARCH PRINCIPLE<strong>Evidence over assumption</strong></div>
+      <div class="float two">FLAGSHIP TECHNOLOGY<strong>VEYRA / 001</strong></div>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="wrap strip-inner">
+    <span>ROOTIUM / 2026</span>
+    <span>VULNERABILITY RESEARCH</span>
+    <span>SYSTEMS THINKING</span>
+    <span>ENGINEERING</span>
+    <span>INDEPENDENT R&D</span>
+  </div>
+</div>
+
+<section id="veyra">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="kicker">01 / Flagship engine</div>
+        <h2>Meet Veyra.<br>Look closer.</h2>
+      </div>
+      <p class="description">
+        Veyra is Rootium's flagship vulnerability analysis engine.
+        It is being developed around a deeper approach to understanding
+        software weaknesses, their underlying causes and the evidence
+        that supports a finding.
+      </p>
+    </div>
+
+    <div class="product reveal">
+      <div class="product-copy">
+        <div class="product-name">VEYRA.</div>
+        <h3>Understand<br>what others<br>might miss.</h3>
+        <p>
+          Moving beyond surface-level pattern matching, Veyra is designed
+          to investigate code with context, reason about security-relevant
+          behaviour and make its analysis explainable.
+        </p>
+        <a class="btn" href="#approach">The thinking behind Veyra ↗</a>
+      </div>
+
+      <div class="dashboard">
+        <div class="window">
+          <div class="window-head">
+            <span>● ● ●</span>
+            <span>VEYRA / ANALYSIS ENVIRONMENT</span>
+            <span>PREVIEW 01</span>
+          </div>
+          <div class="window-body">
+            <div class="sidebar">
+              <div class="side-line active"></div>
+              <div class="side-line"></div>
+              <div class="side-line"></div>
+              <div class="side-line"></div>
+            </div>
+            <div class="editor">
+              <small>INVESTIGATION / CODE CONTEXT</small>
+              <h4>Analysis overview</h4>
+              <div class="code-line"></div>
+              <div class="code-line"></div>
+              <div class="code-line highlight"></div>
+              <div class="code-line"></div>
+              <div class="evidence">
+                <b>SUPPORTING EVIDENCE / IN REVIEW</b>
+                <p>Relevant code relationships and execution conditions are assembled for analyst inspection.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="approach">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="kicker">02 / The approach</div>
+        <h2>From a finding<br>to an understanding.</h2>
+      </div>
+      <p class="description">
+        Meaningful security analysis needs more than a suspicious line
+        of code. It needs the context to understand why something is wrong,
+        when it matters and what demonstrates it.
+      </p>
+    </div>
+
+    <div class="capabilities reveal">
+      <article class="cap">
+        <small>01 / CONTEXT</small>
+        <h3>See the bigger picture</h3>
+        <p>Examine relationships across code, data and execution rather than treating every finding in isolation.</p>
+      </article>
+      <article class="cap">
+        <small>02 / REASONING</small>
+        <h3>Investigate the cause</h3>
+        <p>Trace security-relevant conditions towards an explanation of the underlying weakness.</p>
+      </article>
+      <article class="cap">
+        <small>03 / EVIDENCE</small>
+        <h3>Make analysis inspectable</h3>
+        <p>Connect conclusions to code context and supporting evidence researchers can examine.</p>
+      </article>
+      <article class="cap">
+        <small>04 / VALIDATION</small>
+        <h3>Test the conclusion</h3>
+        <p>Separate promising candidates from findings supported by explicit validation.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<section id="about">
+  <div class="wrap about">
+    <div class="reveal">
+      <div class="kicker">03 / Why Rootium</div>
+      <h2>Better questions.<br>Stronger security.</h2>
+    </div>
+    <div class="reveal">
+      <p><strong>The hardest vulnerabilities are rarely obvious.</strong>
+      They can emerge from assumptions, interactions and conditions
+      distributed across a system.</p>
+      <p>Rootium is an independent security research and engineering
+      initiative focused on building systems that help researchers
+      investigate those deeper relationships, reason about what they
+      find and establish evidence that can withstand scrutiny.</p>
+      <p>Our direction is simple: make complex vulnerability analysis
+      more rigorous, explainable and useful.</p>
+    </div>
+  </div>
+</section>
+
+<section id="research">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="kicker">04 / Research & transparency</div>
+        <h2>Built to be<br>questioned.</h2>
+      </div>
+      <p class="description">
+        We believe security technology should stand on technical substance.
+        Research, evaluation and meaningful engineering progress should
+        be open to inspection.
+      </p>
+    </div>
+
+    <div class="research">
+      <article class="research-card reveal">
+        <small>TECHNICAL RESEARCH</small>
+        <h3>Systems research, grounded in practice.</h3>
+        <p>Exploring software behaviour, vulnerability classes and the engineering challenges behind reliable security analysis.</p>
+      </article>
+      <article class="research-card reveal">
+        <small>OPEN EVALUATION</small>
+        <h3>Measure capability, not claims.</h3>
+        <p>An open-source evaluation initiative is part of our roadmap, designed to make security-analysis capabilities easier to reproduce and compare.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<div class="closing">
+  <div class="wrap closing-box reveal">
+    <div>
+      <div class="kicker">The work is underway</div>
+      <h2>A different depth of analysis.</h2>
+      <p>Rootium is building. Veyra is in development.</p>
+    </div>
+    <a href="#home" class="btn primary">Back to top ↑</a>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div class="wrap footer">
+    <img src="logo.png" alt="ROOTIUM" class="logo">
+    <small>© <span id="year"></span> ROOTIUM / INDEPENDENT SECURITY RESEARCH</small>
+    <div class="footer-links">
+      <a href="#veyra">Veyra</a>
+      <a href="#research">Research</a>
+      <a href="#about">About</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.getElementById("year").textContent=new Date().getFullYear();
+
+if("IntersectionObserver" in window){
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting){
+        entry.target.classList.add("visible");
+        observer.unobserve(entry.target);
+      }
+    });
+  },{threshold:.12});
+
+  document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+}else{
+  document.querySelectorAll(".reveal").forEach(el=>el.classList.add("visible"));
+}
+</script>
+</body>
+</html>
