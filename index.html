@@ -363,6 +363,57 @@ h1 span{color:var(--accent)}
     letter-spacing:1.5px;
 }
 
+/* FOUNDER */
+
+.founder{
+    padding:110px 0;
+    border-bottom:1px solid var(--line);
+}
+
+.founder-grid{
+    display:grid;
+    grid-template-columns:.8fr 1.2fr;
+    gap:90px;
+}
+
+.founder h2{
+    margin-top:22px;
+    font-size:clamp(40px,5vw,59px);
+    font-weight:550;
+    letter-spacing:-4px;
+    line-height:1.1;
+}
+
+.founder-name{
+    font-size:28px;
+    font-weight:550;
+    letter-spacing:-1px;
+}
+
+.founder-role{
+    margin-top:8px;
+    color:var(--accent);
+    font:10px var(--mono);
+    letter-spacing:2px;
+}
+
+.founder-copy p{
+    margin-top:26px;
+    max-width:600px;
+    color:#a4aaa3;
+    font-size:15px;
+    line-height:2;
+}
+
+.founder-note{
+    color:#858b83!important;
+    font:10px var(--mono)!important;
+    letter-spacing:1px;
+    line-height:1.8!important;
+}
+
+.founder-copy .button{margin-top:34px}
+
 /* CAPABILITIES */
 
 .capabilities{
@@ -552,7 +603,7 @@ footer{
 /* TABLET */
 
 @media(max-width:850px){
-    .intro-grid,.philosophy-grid{
+    .intro-grid,.philosophy-grid,.founder-grid{
         grid-template-columns:1fr;
         gap:40px;
     }
@@ -603,11 +654,11 @@ footer{
         flex-direction:column;
     }
 
-    .intro,.veyra,.capabilities,.philosophy{
+    .intro,.veyra,.capabilities,.philosophy,.founder{
         padding:80px 0;
     }
 
-    .intro h2,.philosophy h2{
+    .intro h2,.philosophy h2,.founder h2{
         letter-spacing:-3px;
     }
 
@@ -659,6 +710,7 @@ footer{
             <div class="nav-right">
                 <a href="#about">Company</a>
                 <a href="#veyra">Platform</a>
+                <a href="#founder">Founder</a>
                 <a href="#capabilities">Research</a>
 
                 <a class="contact-button"
@@ -806,6 +858,49 @@ footer{
         </div>
     </section>
 
+    <!-- FOUNDER -->
+
+    <section class="founder" id="founder">
+        <div class="container founder-grid">
+
+            <div class="reveal">
+                <div class="section-number">02 / FOUNDER</div>
+
+                <h2>
+                    Led by a<br>
+                    vulnerability<br>
+                    researcher.
+                </h2>
+            </div>
+
+            <div class="founder-copy reveal">
+
+                <div class="founder-name">Pavitra Jha</div>
+                <div class="founder-role">FOUNDER, ROOTIUM</div>
+
+                <p>
+                    Pavitra is an independent vulnerability researcher
+                    and the founder of Rootium. His published work and
+                    background are documented at his portfolio.
+                </p>
+
+                <p class="founder-note">
+                    PRIOR RESEARCH WAS CONDUCTED INDEPENDENTLY AND IS NOT
+                    ATTRIBUTED TO VEYRA.
+                </p>
+
+                <a class="button"
+                   href="https://pavitrajha.github.io"
+                   target="_blank"
+                   rel="noopener noreferrer">
+                    View portfolio <span>↗</span>
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
     <!-- CAPABILITIES -->
 
     <section class="capabilities" id="capabilities">
@@ -814,7 +909,7 @@ footer{
             <div class="cap-heading reveal">
 
                 <div class="section-number">
-                    02 / RESEARCH
+                    03 / RESEARCH
                 </div>
 
                 <h2>
@@ -870,7 +965,7 @@ footer{
 
             <div class="reveal">
                 <div class="section-number">
-                    03 / APPROACH
+                    04 / APPROACH
                 </div>
 
                 <h2>
